@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Invitation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: sans-serif;
+        }
+
+        /* Full-screen video container */
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Tap to Play Overlay */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            cursor: pointer;
+            z-index: 10;
+            transition: opacity 0.5s ease;
+        }
+
+        .overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .play-btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="video-container">
+        <!-- Tap to Open Overlay -->
+        <div class="overlay" id="videoOverlay" onclick="startInvitation()">
+            <button class="play-btn">Tap to Open Invitation</button>
+        </div>
+
+        <!-- The Background Music (Hidden, loops automatically) -->
+        <audio id="inviteMusic" loop preload="auto">
+            <source src="audio.mpeg" type="audio/mpeg">
+        </audio>
+
+        <!-- The Video (Muted by default to ensure smooth browser playback initialization) -->
+        <video id="inviteVideo" playsinline muted loop preload="auto">
+            <source src="Final _1_1.mp4" type="video/mp4">
+        </video>
+        <video id="inviteVideo" playsinline muted loop preload="auto">
+            <source src="Final_1_2.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <script>
+        function startInvitation() {
+            const video = document.getElementById('inviteVideo');
+            const music = document.getElementById('inviteMusic');
+            const overlay = document.getElementById('videoOverlay');
+
+            // Hide the overlay screen
+            overlay.classList.add('hidden');
+
+            // Play both media elements together
+            video.play().catch(err => console.log("Video block:", err));
+            music.play().catch(err => console.log("Music block:", err));
+        }
+    </script>
+</body>
+
+</html>

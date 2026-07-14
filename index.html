@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitation</title>
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        html,body{height:100%;background:#000;font-family:system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+        .media-wrap{position:relative;width:100%;height:100vh;overflow:auto;display:flex;align-items:center;justify-content:center}
+        /* Default: cover-style fullscreen video */
+        .media-wrap.cover{overflow:hidden}
+        video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        /* When a video is taller than the viewport, allow scrolling */
+        .media-wrap.scrollable{align-items:flex-start}
+        .media-wrap.scrollable video{position:relative;width:100%;height:auto;object-fit:contain}
+        .overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.45),rgba(0,0,0,0.6));display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;z-index:5}
+        .btn{background:#fff;color:#000;border-radius:28px;padding:14px 28px;font-weight:700;border:none;cursor:pointer;font-size:16px;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+        .muted-note{margin-top:16px;opacity:.85;font-size:14px}
+        /* Responsive adjustments */
+        @media(min-width:1024px){
+            .btn{padding:12px 22px;font-size:15px}
+            .muted-note{font-size:13px}
+        }
+        @media(max-width:480px){
+            /* small screen tweaks */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="media-wrap cover">
+        <!-- Background video: the script will try existing files in order -->
+        <video id="bgVideo" playsinline muted preload="auto"></video>
+
+        <!-- Overlay with tap/click to start audio   and unmute video -->
+        <div class="overlay" id="startOverlay" onclick="startInvite()">
+            <button class="btn">Tap to Open Invitation</button>
+            <div class="muted-note">Tap anywhere to start music and video</div>
+        </div>
+
+        <!-- no countdown -->
+
+        <!-- Background audio: uses your existing `audio.mpeg` file -->
+        <audio id="bgAudio" loop preload="auto">
+            <source src="audio.mpeg" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <script>
+        (function(){
+            const v = document.getElementById('bgVideo');
+            const a = document.getElementById('bgAudio');
+            const overlay = document.getElementById('startOverlay');
+
+            // List of candidate video files (cloud-hosted URLs in order)
+            const videos = [
+                'https://res.cloudinary.com/rmq5tyne/video/upload/v1784034464/Final__1_1_ukzm3b.mp4',
+                'https://res.cloudinary.com/rmq5tyne/video/upload/v1784034427/Final_1_2_g7a7yg.mp4'
+            ];
+            let idx = 0;
+
+            function setSrc(){
+                v.src = encodeURI(videos[idx]);
+                v.load();
+            }
+
+            // Detect tall videos and toggle scrollable mode
+            function updateScrollable(){
+                // Use natural video dimensions when available
+                const wrap = document.querySelector('.media-wrap');
+                const vh = window.innerHeight || document.documentElement.clientHeight;
+                // If metadata not loaded yet, we'll check on 'loadedmetadata'
+                if(v.videoHeight && v.videoHeight > vh + 50){
+                    wrap.classList.add('scrollable');
+                    wrap.classList.remove('cover');
+                } else {
+                    wrap.classList.remove('scrollable');
+                    wrap.classList.add('cover');
+                }
+            }
+
+            v.addEventListener('loadedmetadata', updateScrollable);
+            window.addEventListener('resize', updateScrollable);
+
+            // countdown removed
+
+            // If a video fails to load, try the next candidate
+            v.addEventListener('error', ()=>{
+                console.warn('Video load error for', videos[idx]);
+                idx++;
+                if(idx < videos.length){ setSrc(); v.play().catch(()=>{}); }
+            });
+
+
+            // When a video ends, advance to the next in the playlist (loop when finished)
+            v.addEventListener('ended', ()=>{
+                idx = (idx + 1) % videos.length;
+                setSrc();
+                v.play().catch(()=>{});
+            });
+
+            // Helper: return true when the currently playing video file is the second clip
+            function isSecondVideoPlaying(){
+                try{
+                    // Prefer precise URL match for cloud-hosted videos; fall back to index check
+                    const cur = v.currentSrc || '';
+                    if(!cur) return false;
+                    if(cur.indexOf(videos[1]) !== -1) return true;
+                    return idx === 1;
+                }catch(e){return false}
+            }
+
+            // Play/pause background audio only when the second video is playing
+            v.addEventListener('play', ()=>{
+                if(isSecondVideoPlaying()){
+                    a.play().catch(()=>{});
+                } else {
+                    a.pause();
+                }
+            });
+            v.addEventListener('pause', ()=>{ a.pause(); });
+
+            // Initialize with first candidate
+            setSrc();
+            // countdown removed
+
+            window.startInvite = function(){
+                overlay.style.opacity = '0';
+                overlay.style.pointerEvents = 'none';
+
+                // Unmute video and start playback; background audio will start automatically when second clip plays
+                v.muted = false;
+                // Ensure current src is loaded before play
+                v.play().catch(()=>{});
+                // keep audio paused until second video
+                a.pause();
+            }
+        })();
+    </script>
+</body>
+
+</html>
