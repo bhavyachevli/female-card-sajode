@@ -188,8 +188,8 @@
 
         <!-- Overlay with tap/click to start audio   and unmute video -->
         <div class="overlay" id="startOverlay" onclick="startInvite()">
-            <button class="btn">Tap to Open Invitation</button>
-            <div class="muted-note">Tap anywhere to start music and video</div>
+            <!-- <button class="btn">Tap to Open Invitation</button>
+            <div class="muted-note">Tap anywhere to start music and video</div> -->
         </div>
 
         <!-- no countdown -->
@@ -304,7 +304,7 @@
             // Do not initialize src here to avoid automatic large downloads on mobile
             // show a poster image (optional) while waiting for user action
             v.preload = 'none';
-            v.poster = 'https://res.cloudinary.com/rmq5tyne/video/upload/v1784034464/Final__1_1_ukzm3b.jpg';
+            v.poster = 'poster.jpg';
 
             window.startInvite = function () {
                 overlay.style.opacity = '0';
