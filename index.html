@@ -54,21 +54,24 @@
             const a = document.getElementById('bgAudio');
             const overlay = document.getElementById('startOverlay');
 
-            // Cloudinary base resources (we'll request optimized variants per device)
+            // Video assets playlist (empty base means serve local file)
             const videos = [
                 {
-                    id: 'Final__1_1_ukzm3b.mp4',
-                    base: 'https://res.cloudinary.com/rmq5tyne/video/upload/',
+                    id: 'Final_1_1.mp4',
+                    base: '',
                 },
                 {
-                    id: 'Final_1_2_g7a7yg.mp4',
-                    base: 'https://res.cloudinary.com/rmq5tyne/video/upload/',
+                    id: 'Final_1_2.mp4',
+                    base: '',
                 }
             ];
             let idx = 0;
 
-            // Build a Cloudinary URL variant depending on viewport size to reduce bandwidth
+            // Build URL variant (local direct file or optimized Cloudinary variant)
             function variantUrl(item){
+                if (!item.base) {
+                    return item.id;
+                }
                 const w = window.innerWidth || document.documentElement.clientWidth;
                 // use smaller widths for mobile/tablet, larger for desktop
                 const size = w <= 480 ? 640 : (w <= 1024 ? 960 : 1280);
@@ -76,10 +79,12 @@
                 return item.base + 'q_auto,f_auto,w_' + size + '/' + item.id;
             }
 
-            // Do not set video src on load — defer until user taps to reduce mobile data usage
+            // Set video src and configure native loop behavior per-clip
             function setSrc(){
                 const url = variantUrl(videos[idx]);
                 v.src = url;
+                // Loop only the second video (the invitation details) natively
+                v.loop = (idx === 1);
                 v.load();
             }
 
@@ -101,8 +106,6 @@
             v.addEventListener('loadedmetadata', updateScrollable);
             window.addEventListener('resize', updateScrollable);
 
-            // countdown removed
-
             // If a video fails to load, try the next candidate
             v.addEventListener('error', ()=>{
                 console.warn('Video load error for', videos[idx]);
@@ -110,18 +113,18 @@
                 if(idx < videos.length){ setSrc(); v.play().catch(()=>{}); }
             });
 
-
-            // When a video ends, advance to the next in the playlist (loop when finished)
+            // When the first video ends, advance to the second (invitation details) which loops natively
             v.addEventListener('ended', ()=>{
-                idx = (idx + 1) % videos.length;
-                setSrc();
-                v.play().catch(()=>{});
+                if (idx === 0) {
+                    idx = 1;
+                    setSrc();
+                    v.play().catch(()=>{});
+                }
             });
 
             // Helper: return true when the currently playing video file is the second clip
             function isSecondVideoPlaying(){
                 try{
-                    // Prefer precise URL match for cloud-hosted videos; fall back to index check
                     const cur = v.currentSrc || '';
                     if(!cur) return false;
                     if(cur.indexOf(videos[1].id) !== -1) return true;
