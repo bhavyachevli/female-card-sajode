@@ -11,10 +11,25 @@
         .media-wrap{position:relative;width:100%;height:100vh;overflow:auto;display:flex;align-items:center;justify-content:center}
         /* Default: cover-style fullscreen video */
         .media-wrap.cover{overflow:hidden}
-        video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        .video-wrapper{position:absolute;inset:0;width:100%;height:100%}
+        video{width:100%;height:100%;object-fit:cover;display:block}
         /* When a video is taller than the viewport, allow scrolling */
         .media-wrap.scrollable{align-items:flex-start}
-        .media-wrap.scrollable video{position:relative;width:100%;height:auto;object-fit:contain}
+        .media-wrap.scrollable .video-wrapper{position:relative;height:auto}
+        .media-wrap.scrollable video{position:relative;height:auto;object-fit:contain}
+        /* Clickable Map Link styling */
+        .map-link{
+            position:absolute;
+            display:none; /* Shown only when second video is active */
+            left:35.19%;
+            width:33.33%;
+            top:57.29%;
+            height:2.08%;
+            background:rgba(255,255,255,0); /* Completely transparent */
+            cursor:pointer;
+            z-index:10;
+            border-radius:24px;
+        }
         .overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.45),rgba(0,0,0,0.6));display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;z-index:5}
         .btn{background:#fff;color:#000;border-radius:28px;padding:14px 28px;font-weight:700;border:none;cursor:pointer;font-size:16px;box-shadow:0 6px 20px rgba(0,0,0,.35)}
         .muted-note{margin-top:16px;opacity:.85;font-size:14px}
@@ -31,8 +46,11 @@
 
 <body>
     <div class="media-wrap cover">
-        <!-- Background video: the script will try existing files in order -->
-        <video id="bgVideo" playsinline muted preload="auto"></video>
+        <!-- Background video wrapper with transparent map link overlay -->
+        <div class="video-wrapper">
+            <video id="bgVideo" playsinline muted preload="auto"></video>
+            <a href="https://www.google.com/maps/search/?api=1&query=Sampada+Festivity,+Anthem+Circle,+Surat" target="_blank" id="mapLink" class="map-link"></a>
+        </div>
 
         <!-- Overlay with tap/click to start audio   and unmute video -->
         <div class="overlay" id="startOverlay" onclick="startInvite()">
@@ -85,6 +103,13 @@
                 v.src = url;
                 // Loop only the second video (the invitation details) natively
                 v.loop = (idx === 1);
+
+                // Show or hide the map link depending on whether it's the second video
+                const mapLink = document.getElementById('mapLink');
+                if (mapLink) {
+                    mapLink.style.display = (idx === 1) ? 'block' : 'none';
+                }
+
                 v.load();
             }
 
