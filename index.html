@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invitation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -124,8 +127,6 @@
 
         .overlay {
             position: absolute;
-            /* position: relative; */
-
             inset: 0;
             background: #00000000 !important;
             display: flex;
@@ -133,7 +134,105 @@
             align-items: center;
             justify-content: center;
             color: #fff;
-            z-index: 5
+            z-index: 5;
+            transition: opacity 0.6s ease;
+        }
+
+        /* Countdown styling */
+        .countdown-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            padding: 20px;
+            margin-top: 180px; /* Positions it below the logo and title text in the cover video */
+            pointer-events: none; /* Allows click to pass through to overlay */
+            box-sizing: border-box;
+        }
+
+        .countdown-title {
+            font-family: 'Pinyon Script', cursive;
+            font-size: 52px;
+            color: #f9e8a6;
+            margin-bottom: 2px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .countdown-divider {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #f9e8a6, transparent);
+            margin: 8px 0;
+            opacity: 0.8;
+        }
+
+        .countdown-subtitle {
+            font-family: Georgia, serif;
+            font-size: 11px;
+            color: #f9e8a6;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            opacity: 0.95;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .countdown-timer {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .timer-segment {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 50px;
+        }
+
+        .timer-num {
+            font-family: 'BILGIE', 'Playfair Display', Georgia, serif;
+            font-size: 34px;
+            color: #ffffff;
+            font-weight: 500;
+            line-height: 1;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .timer-label {
+            font-family: Georgia, serif;
+            font-size: 8px;
+            color: #f9e8a6;
+            letter-spacing: 1.5px;
+            margin-top: 6px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        @media(max-width: 480px) {
+            .countdown-container {
+                margin-top: 140px; /* Slightly higher on smaller screens */
+            }
+            .countdown-title {
+                font-size: 44px;
+            }
+            .countdown-subtitle {
+                font-size: 9px;
+                letter-spacing: 1.5px;
+            }
+            .timer-num {
+                font-size: 28px;
+            }
+            .timer-label {
+                font-size: 7px;
+                letter-spacing: 1px;
+            }
+            .countdown-timer {
+                gap: 15px;
+            }
         }
 
         .btn {
@@ -187,10 +286,31 @@
             </a>
         </div>
 
-        <!-- Overlay with tap/click to start audio   and unmute video -->
+        <!-- Overlay with tap/click to start audio and unmute video -->
         <div class="overlay" id="startOverlay" onclick="startInvite()">
-            <!-- <button class="btn">Tap to Open Invitation</button>
-            <div class="muted-note">Tap anywhere to start music and video</div> -->
+            <div class="countdown-container">
+                <div class="countdown-title">Countdown</div>
+                <div class="countdown-divider"></div>
+                <div class="countdown-subtitle">To the most special day of our lives</div>
+                <div class="countdown-timer">
+                    <div class="timer-segment">
+                        <span class="timer-num" id="days">0</span>
+                        <span class="timer-label">Days</span>
+                    </div>
+                    <div class="timer-segment">
+                        <span class="timer-num" id="hours">00</span>
+                        <span class="timer-label">Hours</span>
+                    </div>
+                    <div class="timer-segment">
+                        <span class="timer-num" id="minutes">00</span>
+                        <span class="timer-label">Minutes</span>
+                    </div>
+                    <div class="timer-segment">
+                        <span class="timer-num" id="seconds">00</span>
+                        <span class="timer-label">Seconds</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- no countdown -->
@@ -306,6 +426,35 @@
             // show a poster image (optional) while waiting for user action
             v.preload = 'none';
             v.poster = 'poster.jpg';
+
+            // Countdown Timer Logic (Target Wedding Date: June 21, 2026 17:00:00)
+            const targetDate = new Date('June 21, 2026 17:00:00').getTime();
+
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const difference = targetDate - now;
+
+                if (difference < 0) {
+                    document.getElementById('days').innerText = '0';
+                    document.getElementById('hours').innerText = '00';
+                    document.getElementById('minutes').innerText = '00';
+                    document.getElementById('seconds').innerText = '00';
+                    return;
+                }
+
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = days;
+                document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
 
             window.startInvite = function () {
                 overlay.style.opacity = '0';
