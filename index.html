@@ -61,28 +61,45 @@
         .media-wrap.scrollable .video-wrapper {
             position: relative;
             width: 100%;
-            height: 888.89vw;
-            /* Exact aspect ratio for 1080x9600 video relative to width */
+            height: auto;
         }
 
-        .media-wrap.scrollable video {
-            position: absolute !important;
-            inset: 0;
+        .media-wrap.scrollable #bgVideo {
+            display: none;
+        }
+
+        .scroll-container {
+            display: none;
+            width: 100%;
+            position: relative;
+        }
+
+        .page-wrapper {
+            position: relative;
+            width: 100%;
+            height: 177.78vw;
+            /* Exact 9:16 aspect ratio (1920/1080) relative to screen width */
+            overflow: hidden;
+        }
+
+        .page-video {
             width: 100%;
             height: 100%;
-            object-fit: fill;
+            object-fit: cover;
+            display: block;
         }
 
-        /* Clickable Map Link styling */
+        /* Clickable Map Link styling nested in Page 3 */
         .map-link {
             position: absolute;
             display: none;
-            /* Shown only when second video is active */
             left: 50%;
             transform: translateX(-50%);
             width: 31.57%;
-            top: 57.50%;
-            height: 1.77%;
+            top: 87.50%;
+            /* Aligns perfectly on top of Sampada Festivity on Page 3 */
+            height: 8.85%;
+            /* Proportional height inside 1920px canvas */
             background-color: #727c56;
             /* Olive green matching video */
             border: 2px solid #b5af8b;
@@ -150,12 +167,14 @@
         .video-countdown {
             position: absolute;
             display: none;
-            /* Shown only when second video is active */
             left: 50%;
             transform: translateX(-50%);
-            width: 58.33%;
-            top: 35.625%;
-            height: 2.50%;
+            width: 75%;
+            /* Extra breathing room to prevent label overlapping */
+            top: 78.13%;
+            /* Aligns perfectly in the blank space of Page 2 */
+            height: 12.50%;
+            /* Proportional height inside 1920px canvas */
             align-items: center;
             justify-content: center;
             z-index: 10;
@@ -255,37 +274,55 @@
         <!-- Background video wrapper with transparent map link and countdown overlays -->
         <div class="video-wrapper">
             <video id="bgVideo" playsinline muted preload="auto"></video>
-            <!-- Preload Video 2 in the background to ensure instant playback on mobile -->
-            <video id="preloadVideo" style="display: none;" playsinline muted preload="auto"
-                src="Final_1_2.mp4"></video>
-            <div id="videoCountdown" class="video-countdown">
-                <div class="countdown-timer">
-                    <div class="timer-segment">
-                        <span class="timer-num" id="days">0</span>
-                        <span class="timer-label">Days</span>
-                    </div>
-                    <div class="timer-segment">
-                        <span class="timer-num" id="hours">00</span>
-                        <span class="timer-label">Hours</span>
-                    </div>
-                    <div class="timer-segment">
-                        <span class="timer-num" id="minutes">00</span>
-                        <span class="timer-label">Minutes</span>
-                    </div>
-                    <div class="timer-segment">
-                        <span class="timer-num" id="seconds">00</span>
-                        <span class="timer-label">Seconds</span>
+
+            <!-- Scroll container for stacked page videos (loaded on-demand for Video 2) -->
+            <div id="scrollContainer" class="scroll-container">
+                <div class="page-wrapper">
+                    <video class="page-video" loop muted playsinline data-src="page1.mp4"></video>
+                </div>
+                <div class="page-wrapper">
+                    <video class="page-video" loop muted playsinline data-src="page2.mp4"></video>
+                    <!-- Countdown Overlay relative to Page 2 -->
+                    <div id="videoCountdown" class="video-countdown">
+                        <div class="countdown-timer">
+                            <div class="timer-segment">
+                                <span class="timer-num" id="days">0</span>
+                                <span class="timer-label">Days</span>
+                            </div>
+                            <div class="timer-segment">
+                                <span class="timer-num" id="hours">00</span>
+                                <span class="timer-label">Hours</span>
+                            </div>
+                            <div class="timer-segment">
+                                <span class="timer-num" id="minutes">00</span>
+                                <span class="timer-label">Minutes</span>
+                            </div>
+                            <div class="timer-segment">
+                                <span class="timer-num" id="seconds">00</span>
+                                <span class="timer-label">Seconds</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="page-wrapper">
+                    <video class="page-video" loop muted playsinline data-src="page3.mp4"></video>
+                    <!-- Map Overlay relative to Page 3 -->
+                    <a href="https://www.google.com/maps/search/?api=1&query=Sampada+Festivity,+Anthem+Circle,+Surat"
+                        target="_blank" id="mapLink" class="map-link">
+                        <svg class="map-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                        </svg>
+                        <span>MAP</span>
+                    </a>
+                </div>
+                <div class="page-wrapper">
+                    <video class="page-video" loop muted playsinline data-src="page4.mp4"></video>
+                </div>
+                <div class="page-wrapper">
+                    <video class="page-video" loop muted playsinline data-src="page5.mp4"></video>
+                </div>
             </div>
-            <a href="https://www.google.com/maps/search/?api=1&query=Sampada+Festivity,+Anthem+Circle,+Surat"
-                target="_blank" id="mapLink" class="map-link">
-                <svg class="map-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path
-                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                </svg>
-                <span>MAP</span>
-            </a>
         </div>
 
         <!-- Overlay with tap/click to start audio and unmute video -->
@@ -332,26 +369,79 @@
                 return item.base + 'q_auto,f_auto,w_' + size + '/' + item.id;
             }
 
+            // Initialize IntersectionObserver to play/pause page videos on scroll
+            let pageObserver;
+            if ('IntersectionObserver' in window) {
+                pageObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        const pv = entry.target;
+                        if (entry.isIntersecting) {
+                            pv.play().catch(() => { });
+                        } else {
+                            pv.pause();
+                        }
+                    });
+                }, { threshold: 0.15 });
+            }
+
+            // Preload details page videos in the background
+            function preloadDetailsVideos() {
+                const scrollContainer = document.getElementById('scrollContainer');
+                if (scrollContainer) {
+                    const pageVideos = scrollContainer.querySelectorAll('.page-video');
+                    pageVideos.forEach(pv => {
+                        if (!pv.src) {
+                            pv.src = pv.getAttribute('data-src');
+                            pv.preload = 'auto';
+                            pv.load();
+                        }
+                    });
+                }
+            }
+
             // Set video src and configure native loop behavior per-clip
             function setSrc() {
-                const url = variantUrl(videos[idx]);
-                v.src = url;
-                // Loop only the second video (the invitation details) natively
-                v.loop = (idx === 1);
-
-                // Show or hide the map link and countdown overlay depending on whether it's the second video
                 const mapLink = document.getElementById('mapLink');
                 const videoCountdown = document.getElementById('videoCountdown');
-                if (mapLink) {
-                    mapLink.style.display = (idx === 1) ? 'flex' : 'none';
-                }
-                if (videoCountdown) {
-                    videoCountdown.style.display = (idx === 1) ? 'flex' : 'none';
+                const scrollContainer = document.getElementById('scrollContainer');
+
+                if (idx === 0) {
+                    v.style.display = 'block';
+                    if (scrollContainer) scrollContainer.style.display = 'none';
+                    if (mapLink) mapLink.style.display = 'none';
+                    if (videoCountdown) videoCountdown.style.display = 'none';
+
+                    const url = variantUrl(videos[0]);
+                    v.src = url;
+                    v.loop = false;
+                    v.load();
+                } else {
+                    v.style.display = 'none';
+                    v.pause();
+                    v.src = ''; // stop cover video
+
+                    if (scrollContainer) {
+                        scrollContainer.style.display = 'block';
+                        const pageVideos = scrollContainer.querySelectorAll('.page-video');
+                        pageVideos.forEach(pv => {
+                            if (!pv.src) {
+                                pv.src = pv.getAttribute('data-src');
+                                pv.load();
+                                if (pageObserver) {
+                                    pageObserver.observe(pv);
+                                } else {
+                                    pv.play().catch(() => { });
+                                }
+                            } else {
+                                pv.play().catch(() => { });
+                            }
+                        });
+                    }
+                    if (mapLink) mapLink.style.display = 'flex';
+                    if (videoCountdown) videoCountdown.style.display = 'flex';
                 }
 
                 updateScrollable();
-
-                v.load();
             }
 
             // Detect tall videos and toggle scrollable mode
@@ -376,23 +466,18 @@
                 if (idx < videos.length) { setSrc(); v.play().catch(() => { }); }
             });
 
-            // When the first video ends, advance to the second (invitation details) which loops natively
+            // When the first video ends, advance to the second (invitation details)
             v.addEventListener('ended', () => {
                 if (idx === 0) {
                     idx = 1;
                     setSrc();
-                    v.play().catch(() => { });
+                    a.play().catch(() => { }); // Start background music for Video 2 details
                 }
             });
 
-            // Helper: return true when the currently playing video file is the second clip
+            // Helper: return true when the currently playing video is the second clip
             function isSecondVideoPlaying() {
-                try {
-                    const cur = v.currentSrc || '';
-                    if (!cur) return false;
-                    if (cur.indexOf(videos[1].id) !== -1) return true;
-                    return idx === 1;
-                } catch (e) { return false }
+                return idx === 1;
             }
 
             // Play/pause background audio only when the second video is playing
@@ -444,11 +529,12 @@
 
                 // Keep video muted for reliable mobile autoplay and browser compatibility
                 v.muted = true;
-                // Ensure current src is loaded before play (lazy-load if needed)
                 if (!v.src) { setSrc(); }
                 v.play().catch(() => { });
-                // keep audio paused until second video
                 a.pause();
+
+                // Preload all details pages in the background while Video 1 plays
+                preloadDetailsVideos();
             }
         })();
     </script>
