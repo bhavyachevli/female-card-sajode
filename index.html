@@ -61,9 +61,10 @@
         .media-wrap.scrollable .video-wrapper {
             position: relative;
             width: 100%;
-            height: 888.89vw; /* Exact aspect ratio for 1080x9600 video relative to width */
+            height: 888.89vw;
+            /* Exact aspect ratio for 1080x9600 video relative to width */
         }
- 
+
         .media-wrap.scrollable video {
             position: absolute !important;
             inset: 0;
@@ -254,6 +255,9 @@
         <!-- Background video wrapper with transparent map link and countdown overlays -->
         <div class="video-wrapper">
             <video id="bgVideo" playsinline muted preload="auto"></video>
+            <!-- Preload Video 2 in the background to ensure instant playback on mobile -->
+            <video id="preloadVideo" style="display: none;" playsinline muted preload="auto"
+                src="Final_1_2.mp4"></video>
             <div id="videoCountdown" class="video-countdown">
                 <div class="countdown-timer">
                     <div class="timer-segment">
@@ -401,9 +405,8 @@
             });
             v.addEventListener('pause', () => { a.pause(); });
 
-            // Do not initialize src here to avoid automatic large downloads on mobile
-            // show a poster image (optional) while waiting for user action
-            v.preload = 'none';
+            // Preload the video for instant start on mobile
+            v.preload = 'auto';
             v.poster = 'poster.jpg';
 
             // Countdown Timer Logic (Target Wedding Date: July 23, 2026 17:00:00) - Numeric format for iOS Safari compatibility (month is 0-indexed)
