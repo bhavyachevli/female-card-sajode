@@ -490,6 +490,9 @@
             });
             v.addEventListener('pause', () => { a.pause(); });
 
+            // Initialize cover video source on page load to start preloading immediately
+            setSrc();
+
             // Preload the video for instant start on mobile
             v.preload = 'auto';
             v.poster = 'poster.jpg';
