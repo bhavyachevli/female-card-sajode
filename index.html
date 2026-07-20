@@ -391,7 +391,7 @@
                     const pageVideos = scrollContainer.querySelectorAll('.page-video');
                     pageVideos.forEach(pv => {
                         if (!pv.src) {
-                            pv.src = pv.getAttribute('data-src') + '?v=12';
+                            pv.src = pv.getAttribute('data-src') + '?v=13';
                             pv.preload = 'auto';
                             pv.load();
                         }
@@ -411,7 +411,7 @@
                     if (mapLink) mapLink.style.display = 'none';
                     if (videoCountdown) videoCountdown.style.display = 'none';
 
-                    const url = variantUrl(videos[0]) + '?v=12';
+                    const url = variantUrl(videos[0]) + '?v=13';
                     v.src = url;
                     v.loop = false;
                     v.load();
@@ -425,7 +425,7 @@
                         const pageVideos = scrollContainer.querySelectorAll('.page-video');
                         pageVideos.forEach(pv => {
                             if (!pv.src) {
-                                pv.src = pv.getAttribute('data-src') + '?v=12';
+                                pv.src = pv.getAttribute('data-src') + '?v=13';
                                 pv.load();
                                 if (pageObserver) {
                                     pageObserver.observe(pv);
