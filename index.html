@@ -347,11 +347,11 @@
             // Video assets playlist (empty base means serve local file)
             const videos = [
                 {
-                    id: 'Final_1_1.mp4',
+                    id: 'Final 1 (Female).mp4',
                     base: '',
                 },
                 {
-                    id: 'Final 1.2(8).mp4',
+                    id: 'Final 2 (Female,Sahparivaar)v2 (1).mp4',
                     base: '',
                 }
             ];
@@ -391,7 +391,7 @@
                     const pageVideos = scrollContainer.querySelectorAll('.page-video');
                     pageVideos.forEach(pv => {
                         if (!pv.src) {
-                            pv.src = pv.getAttribute('data-src') + '?v=9';
+                            pv.src = pv.getAttribute('data-src') + '?v=12';
                             pv.preload = 'auto';
                             pv.load();
                         }
@@ -411,7 +411,7 @@
                     if (mapLink) mapLink.style.display = 'none';
                     if (videoCountdown) videoCountdown.style.display = 'none';
 
-                    const url = variantUrl(videos[0]) + '?v=9';
+                    const url = variantUrl(videos[0]) + '?v=12';
                     v.src = url;
                     v.loop = false;
                     v.load();
@@ -425,7 +425,7 @@
                         const pageVideos = scrollContainer.querySelectorAll('.page-video');
                         pageVideos.forEach(pv => {
                             if (!pv.src) {
-                                pv.src = pv.getAttribute('data-src') + '?v=9';
+                                pv.src = pv.getAttribute('data-src') + '?v=12';
                                 pv.load();
                                 if (pageObserver) {
                                     pageObserver.observe(pv);
